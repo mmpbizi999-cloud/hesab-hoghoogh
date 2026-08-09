@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ماشین‌حساب حقوق و مالیات ۱۴۰۵</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1c2b25;
+    --paper:#faf6ec;
+    --paper-line:#d8cfb4;
+    --ledger:#0f3d33;
+    --ledger-deep:#0a2b24;
+    --gold:#c9962b;
+    --gold-soft:#e4c988;
+    --stamp-red:#a13d2e;
+    --muted:#6b7a71;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ledger);
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(255,255,255,0.04), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(255,255,255,0.03), transparent 45%);
+    font-family:'Vazirmatn', sans-serif;
+    color:var(--ink);
+    min-height:100vh;
+    padding:32px 16px 80px;
+    direction:rtl;
+  }
+  .wrap{max-width:640px;margin:0 auto;}
+
+  header{
+    text-align:center;
+    margin-bottom:28px;
+    color:var(--paper);
+  }
+  header .eyebrow{
+    font-size:13px;
+    letter-spacing:0.5px;
+    color:var(--gold-soft);
+    font-weight:600;
+    margin-bottom:8px;
+  }
+  header h1{
+    font-size:clamp(26px,6vw,36px);
+    font-weight:800;
+    margin:0 0 6px;
+    line-height:1.3;
+  }
+  header p{
+    font-size:14px;
+    color:rgba(250,246,236,0.65);
+    margin:0;
+  }
+
+  .input-card{
+    background:rgba(250,246,236,0.06);
+    border:1px solid rgba(250,246,236,0.12);
+    border-radius:16px;
+    padding:20px;
+    margin-bottom:20px;
+  }
+  .input-card label{
+    display:block;
+    color:var(--gold-soft);
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:10px;
+  }
+  .input-row{
+    display:flex;
+    align-items:center;
+    background:var(--paper);
+    border-radius:12px;
+    padding:14px 16px;
+    gap:8px;
+  }
+  .input-row input{
+    flex:1;
+    border:none;
+    outline:none;
+    background:transparent;
+    font-family:'Vazirmatn', sans-serif;
+    font-size:22px;
+    font-weight:700;
+    color:var(--ink);
+    text-align:right;
+    min-width:0;
+  }
+  .input-row span{
+    color:var(--muted);
+    font-size:14px;
+    font-weight:600;
+    white-space:nowrap;
+  }
+  .slider{
+    width:100%;
+    margin-top:14px;
+    accent-color:var(--gold);
+  }
+  .quick-picks{
+    display:flex;
+    gap:8px;
+    margin-top:12px;
+    flex-wrap:wrap;
+  }
+  .quick-picks button{
+    background:rgba(250,246,236,0.1);
+    border:1px solid rgba(250,246,236,0.18);
+    color:var(--paper);
+    border-radius:999px;
+    padding:6px 14px;
+    font-family:'Vazirmatn', sans-serif;
+    font-size:12.5px;
+    font-weight:600;
+    cursor:pointer;
+    transition:background 0.15s;
+  }
+  .quick-picks button:hover, .quick-picks button:focus-visible{
+    background:var(--gold);
+    color:var(--ledger-deep);
+    outline:none;
+  }
+
+  /* --- Payslip receipt --- */
+  .receipt-shell{
+    position:relative;
+    padding:0 6px;
+  }
+  .receipt{
+    background:var(--paper);
+    border-radius:4px;
+    position:relative;
+    padding:26px 26px 30px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.35);
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(28,43,37,0.05) 28px);
+  }
+  .receipt::before, .receipt::after{
+    content:"";
+    position:absolute;
+    left:0; right:0;
+    height:14px;
+    background:
+      radial-gradient(circle, var(--ledger) 6px, transparent 6.5px) 0 0 / 20px 20px repeat-x;
+  }
+  .receipt::before{ top:-7px; }
+  .receipt::after{ bottom:-7px; transform:scaleY(-1); }
+
+  .receipt-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    border-bottom:2px dashed var(--paper-line);
+    padding-bottom:14px;
+    margin-bottom:16px;
+  }
+  .receipt-head .title{
+    font-weight:800;
+    font-size:16px;
+    color:var(--ledger);
+  }
+  .receipt-head .sub{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:4px;
+  }
+  .receipt-head .stamp{
+    border:2px solid var(--stamp-red);
+    color:var(--stamp-red);
+    border-radius:8px;
+    padding:4px 10px;
+    font-size:11px;
+    font-weight:700;
+    transform:rotate(6deg);
+    opacity:0.85;
+  }
+
+  .line{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    padding:9px 0;
+    font-size:14.5px;
+  }
+  .line .label{color:var(--ink);font-weight:500;}
+  .line .label .hint{display:block;font-size:11px;color:var(--muted);font-weight:400;margin-top:2px;}
+  .line .value{
+    font-weight:700;
+    font-variant-numeric:tabular-nums;
+    direction:ltr;
+    unicode-bidi:plaintext;
+  }
+  .line.deduct .value{color:var(--stamp-red);}
+  .line.deduct .value::before{content:"− ";}
+
+  .divider{border:none;border-top:1px dashed var(--paper-line);margin:6px 0;}
+
+  .net-row{
+    margin-top:14px;
+    background:var(--ledger);
+    color:var(--paper);
+    border-radius:10px;
+    padding:16px 18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .net-row .label{font-size:13px;font-weight:600;color:var(--gold-soft);}
+  .net-row .value{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:plaintext;}
+
+  .bar{
+    height:8px;
+    border-radius:999px;
+    background:rgba(28,43,37,0.08);
+    overflow:hidden;
+    display:flex;
+    margin-top:16px;
+  }
+  .bar .seg{height:100%;}
+  .bar .seg.net{background:var(--ledger);}
+  .bar .seg.insurance{background:#8a9c92;}
+  .bar .seg.tax{background:var(--stamp-red);}
+
+  .legend{
+    display:flex;
+    gap:16px;
+    margin-top:10px;
+    font-size:11.5px;
+    color:var(--muted);
+    flex-wrap:wrap;
+  }
+  .legend span{display:flex;align-items:center;gap:5px;}
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+  .dot.net{background:var(--ledger);}
+  .dot.insurance{background:#8a9c92;}
+  .dot.tax{background:var(--stamp-red);}
+
+  footer{
+    text-align:center;
+    margin-top:26px;
+    font-size:11.5px;
+    color:rgba(250,246,236,0.45);
+    line-height:1.9;
+    padding:0 10px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">سال ۱۴۰۵ · طبق آخرین نرخ‌های بودجه</div>
+    <h1>ماشین‌حساب حقوق و مالیات</h1>
+    <p>حقوق ناخالص رو وارد کن، فیش حقوقیت رو زنده ببین</p>
+  </header>
+
+  <div class="input-card">
+    <label for="salary">حقوق ناخالص ماهانه (تومان)</label>
+    <div class="input-row">
+      <input type="text" inputmode="numeric" id="salary" value="30,000,000">
+      <span>تومان</span>
+    </div>
+    <input type="range" class="slider" id="slider" min="10000000" max="300000000" step="500000" value="30000000">
+    <div class="quick-picks">
+      <button data-v="15000000">۱۵ میلیون</button>
+      <button data-v="30000000">۳۰ میلیون</button>
+      <button data-v="50000000">۵۰ میلیون</button>
+      <button data-v="80000000">۸۰ میلیون</button>
+      <button data-v="120000000">۱۲۰ میلیون</button>
+    </div>
+  </div>
+
+  <div class="receipt-shell">
+    <div class="receipt">
+      <div class="receipt-head">
+        <div>
+          <div class="title">فیش حقوقی</div>
+          <div class="sub">محاسبه تخمینی · اردیبهشت ۱۴۰۵</div>
+        </div>
+        <div class="stamp">پیش‌نویس</div>
+      </div>
+
+      <div class="line">
+        <div class="label">حقوق ناخالص</div>
+        <div class="value" id="out-gross">۰</div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="line deduct">
+        <div class="label">حق بیمه (سهم کارگر ۷٪)<span class="hint">تأمین اجتماعی</span></div>
+        <div class="value" id="out-insurance">۰</div>
+      </div>
+
+      <div class="line deduct">
+        <div class="label">مالیات حقوق<span class="hint">پلکانی، بعد از معافیت ۴۰ میلیونی</span></div>
+        <div class="value" id="out-tax">۰</div>
+      </div>
+
+      <div class="bar">
+        <div class="seg net" id="bar-net"></div>
+        <div class="seg insurance" id="bar-insurance"></div>
+        <div class="seg tax" id="bar-tax"></div>
+      </div>
+      <div class="legend">
+        <span><i class="dot net"></i> خالص دریافتی</span>
+        <span><i class="dot insurance"></i> بیمه</span>
+        <span><i class="dot tax"></i> مالیات</span>
+      </div>
+
+      <div class="net-row">
+        <div class="label">خالص قابل دریافت</div>
+        <div class="value" id="out-net">۰ تومان</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    این محاسبه بر اساس نرخ بیمه سهم کارگر (۷٪) و جدول پلکانی مالیات حقوق ۱۴۰۵ (معافیت ماهانه ۴۰ میلیون تومان) است.<br>
+    مزایایی مثل حق مسکن، بن، اضافه‌کاری و سقف بیمه در نظر گرفته نشده — برای فیش رسمی با حسابدار شرکتت هماهنگ کن.
+  </footer>
+
+</div>
+
+<script>
+const faDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+function toFa(num){
+  return Math.round(num).toLocaleString('en-US').replace(/\d/g, d => faDigits[d]);
+}
+function toFaPlain(numStr){
+  return numStr.replace(/\d/g, d => faDigits[d]);
+}
+
+function calcInsurance(gross){
+  return gross * 0.07;
+}
+
+// Monthly progressive tax brackets for 1405 (in toman), applied to taxable income (gross - insurance)
+const brackets = [
+  { upTo: 40000000, rate: 0 },
+  { upTo: 80000000, rate: 0.10 },
+  { upTo: 100000000, rate: 0.15 },
+  { upTo: 120000000, rate: 0.20 },
+  { upTo: 140000000, rate: 0.25 },
+  { upTo: Infinity,  rate: 0.30 },
+];
+
+function calcTax(taxable){
+  let remaining = taxable;
+  let prevCap = 0;
+  let tax = 0;
+  for(const b of brackets){
+    if(remaining <= 0) break;
+    const bandSize = b.upTo - prevCap;
+    const amountInBand = Math.min(remaining, bandSize);
+    tax += amountInBand * b.rate;
+    remaining -= amountInBand;
+    prevCap = b.upTo;
+  }
+  return tax;
+}
+
+function render(gross){
+  const insurance = calcInsurance(gross);
+  const taxable = Math.max(0, gross - insurance);
+  const tax = calcTax(taxable);
+  const net = gross - insurance - tax;
+
+  document.getElementById('out-gross').textContent = toFa(gross) + ' تومان';
+  document.getElementById('out-insurance').textContent = toFa(insurance) + ' تومان';
+  document.getElementById('out-tax').textContent = toFa(tax) + ' تومان';
+  document.getElementById('out-net').textContent = toFa(net) + ' تومان';
+
+  const netPct = gross > 0 ? (net/gross*100) : 0;
+  const insPct = gross > 0 ? (insurance/gross*100) : 0;
+  const taxPct = gross > 0 ? (tax/gross*100) : 0;
+  document.getElementById('bar-net').style.width = netPct + '%';
+  document.getElementById('bar-insurance').style.width = insPct + '%';
+  document.getElementById('bar-tax').style.width = taxPct + '%';
+}
+
+const salaryInput = document.getElementById('salary');
+const slider = document.getElementById('slider');
+
+function parseInput(str){
+  const digits = str.replace(/[^\d]/g, '');
+  return digits ? parseInt(digits, 10) : 0;
+}
+
+function updateFromValue(v){
+  v = Math.max(0, v);
+  salaryInput.value = v.toLocaleString('en-US');
+  slider.value = Math.min(Math.max(v, slider.min), slider.max);
+  render(v);
+}
+
+salaryInput.addEventListener('input', (e) => {
+  const v = parseInput(e.target.value);
+  const cursorFromEnd = e.target.value.length - e.target.selectionStart;
+  e.target.value = v.toLocaleString('en-US');
+  const pos = Math.max(0, e.target.value.length - cursorFromEnd);
+  e.target.setSelectionRange(pos, pos);
+  slider.value = Math.min(Math.max(v, slider.min), slider.max);
+  render(v);
+});
+
+slider.addEventListener('input', (e) => {
+  updateFromValue(parseInt(e.target.value, 10));
+});
+
+document.querySelectorAll('.quick-picks button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    updateFromValue(parseInt(btn.dataset.v, 10));
+  });
+});
+
+render(parseInput(salaryInput.value));
+</script>
+</body>
+</html>
